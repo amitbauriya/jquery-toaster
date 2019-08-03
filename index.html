@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Selekt Test</title>
+    <!--Stylesheets-->
+    <style type="text/css">
+	select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #f7fbff;
+    background-image: none;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select */
+.select {
+    position: relative;
+    display: flex;
+    width: 10em;
+    height: 3em;
+    line-height: 3;
+    background: #c7b6b6;
+    overflow: hidden;
+    border-radius: 0;
+	    border: 1px solid #ccc;
+}
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color: #fff;
+  cursor: pointer;
+}
+/* Arrow */
+.select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    font-size: 11px;
+    margin-top: 5px;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
+}
+.form{
+display:block;
+padding:20px;margin:10px;
+}
+input.form-control {
+    display: -webkit-inline-box;
+    width: fit-content;
+    border-radius: 0;
+    margin-right: -5px;
+    padding: 20px 12px;
+}
+.select {
+    display: inline-flex;
+}
+.alert.alert-success.alert-dismissible {
+    color: #000;
+    background-color: #fff;
+    border-color: #3c763d;
+    border-left: 10px solid #3c763d;
+}
+.alert.alert-warning.alert-dismissible {
+    color: #000;
+    background-color: #fff;
+    border-color: #ecde2a;
+    border-left: 10px solid #ecde2a;
+}
+.alert.alert-danger.alert-dismissible {
+    color: #000;
+    background-color: #fff;
+    border-color: #c31111;
+    border-left: 10px solid #c31111;
+}
+	</style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!--jQuery-->
+
+    
+    <!--[if IE]>
+          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+          
+    <![endif]-->
+	<script
+  src="https://code.jquery.com/jquery-2.1.0.min.js"
+  integrity="sha256-8oQ1OnzE2X9v4gpRVRMb1DWHoPHJilbur1LP9ykQ9H0="
+  crossorigin="anonymous"></script>
+	
+</head>
+
+<body>
+    <h1 align="center">Selekt Test</h1>
+    
+    <div align="center">
+	
+<div class="container" role="main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    	<h3 class="panel-title">Toast</h3>
+
+                </div>
+                <div class="panel-body" style="padding-top: 50px;padding-bottom: 100px;">
+                 <form id="preptoast" role="form" class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only" for="toastMessage">Toast Message</label>
+                            <input type="text" class="form-control" id="toastMessage" placeholder="Message">
+                        </div>
+						<div class="form-group">
+                            <label class="sr-only" for="toastPriority">Toast Priority</label>
+							<div class="select">
+                            <select class="select" id="toastPriority" placeholder="Priority">
+                                <option selected disabled>Select option</option>
+                                <option value="success">success</option>
+                                <option value="warning">warning</option>
+                                <option value="danger">danger</option>
+                            </select>
+							</div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>   
+<p style="float: right;padding: 10px;bottom: 0;position: absolute;">Devloped by Amit Bauriya.</p>	
+</body>
+<script>
+var interval;
+
+$(document).ready(function () {
+    
+
+    $('#btnstart').click(start);
+    $('#btnstop').click(stop);
+    $('#preptoast').on('submit', maketoast);
+
+    start();
+	
+	
+});
+function start() {
+    if (!interval) {
+        interval = setInterval(function () {
+        }, 1500);
+    }
+    this.blur();
+}
+
+function stop() {
+    if (interval) {
+        clearInterval(interval);
+        interval = false;
+    }
+    this.blur();
+}
+
+
+function maketoast(evt) {
+    evt.preventDefault();
+
+    var options = {
+        priority: $('#toastPriority').val() || null,
+        title: $("#toastPriority :selected").val() || null,
+        message: $('#toastMessage').val() || 'A message is required'
+    };
+
+    if (options.priority === '<use default>') {
+        options.priority = null;
+    }
+
+    var codeobj = [];
+    var codestr = [];
+
+    var labels = ['message', 'title', 'priority'];
+    for (var i = 0, l = labels.length; i < l; i += 1) {
+        if (options[labels[i]] !== null) {
+            codeobj.push([labels[i], "'" + options[labels[i]] + "'"].join(' : '));
+        }
+
+        codestr.push((options[labels[i]] !== null) ? "'" + options[labels[i]] + "'" : 'null');
+    }
+
+    if (codestr[2] === 'null') {
+        codestr.pop();
+        if (codestr[1] === 'null') {
+            codestr.pop();
+        }
+    }
+
+    codeobj = "$.toaster({ " + codeobj.join(", ") + " });"
+    codestr = "$.toaster(" + codestr.join(", ") + ");"
+
+    $.toaster(options);
+}
+	</script>
+	<script>
+	/***********************************************************************************
+* Add Array.indexOf                                                                *
+***********************************************************************************/
+(function ()
+{
+	if (typeof Array.prototype.indexOf !== 'function')
+	{
+		Array.prototype.indexOf = function(searchElement, fromIndex)
+		{
+			for (var i = (fromIndex || 0), j = this.length; i < j; i += 1)
+			{
+				if ((searchElement === undefined) || (searchElement === null))
+				{
+					if (this[i] === searchElement)
+					{
+						return i;
+					}
+				}
+				else if (this[i] === searchElement)
+				{
+					return i;
+				}
+			}
+			return -1;
+		};
+	}
+})();
+/**********************************************************************************/
+
+(function ($,undefined)
+{
+	var toasting =
+	{
+		gettoaster : function ()
+		{
+			var toaster = $('#' + settings.toaster.id);
+
+			if(toaster.length < 1)
+			{
+				toaster = $(settings.toaster.template).attr('id', settings.toaster.id).css(settings.toaster.css).addClass(settings.toaster['class']);
+
+				if ((settings.stylesheet) && (!$("link[href=" + settings.stylesheet + "]").length))
+				{
+					$('head').appendTo('<link rel="stylesheet" href="' + settings.stylesheet + '">');
+				}
+
+				$(settings.toaster.container).append(toaster);
+			}
+
+			return toaster;
+		},
+
+		notify : function (title, message, priority)
+		{
+			var $toaster = this.gettoaster();
+			var $toast  = $(settings.toast.template.replace('%priority%', priority)).hide().css(settings.toast.css).addClass(settings.toast['class']);
+
+			$('.title', $toast).css(settings.toast.csst).html(title);
+			$('.message', $toast).css(settings.toast.cssm).html(message);
+
+			if ((settings.debug) && (window.console))
+			{
+				console.log(toast);
+			}
+
+			$toaster.append(settings.toast.display($toast));
+
+			if (settings.donotdismiss.indexOf(priority) === -1)
+			{
+				var timeout = (typeof settings.timeout === 'number') ? settings.timeout : ((typeof settings.timeout === 'object') && (priority in settings.timeout)) ? settings.timeout[priority] : 1500;
+				setTimeout(function()
+				{
+					settings.toast.remove($toast, function()
+					{
+						$toast.remove();
+					});
+				}, timeout);
+			}
+		}
+	};
+
+	var defaults =
+	{
+		'toaster'         :
+		{
+			'id'        : 'toaster',
+			'container' : 'body',
+			'template'  : '<div></div>',
+			'class'     : 'toaster',
+			'css'       :
+			{
+				'position' : 'fixed',
+				'top'      : '10px',
+				'right'    : '10px',
+				'width'    : '300px',
+				'zIndex'   : 50000
+			}
+		},
+
+		'toast'       :
+		{
+			'template' :
+			'<div class="alert alert-%priority% alert-dismissible" role="alert">' +
+				'<button id="close-btn" type="button" class="close" data-dismiss="alert">' +
+					'<span aria-hidden="true">&times;</span>' +
+					
+				'</button>' +
+				'<span class="title"></span><span class="message"></span>' +
+			'</div>',
+
+			'css'      : {},
+			'cssm'     : {},
+			'csst'     : { 'fontWeight' : 'bold', 'font-size': '19px', 'display': 'table-row' },
+
+			'fade'     : 'slow',
+
+			'display'    : function ($toast)
+			{
+				return $toast.fadeIn(settings.toast.fade);
+			},
+
+			'remove'     : function ($toast, callback)
+			{
+				return $toast.animate(
+					{
+						opacity : '0',
+						padding : '0px',
+						margin  : '0px',
+						height  : '0px'
+					},
+					{
+						duration : settings.toast.fade,
+						complete : callback
+					}
+				);
+			}
+		},
+
+		'debug'        : false,
+		'timeout'      : 1500,
+		'stylesheet'   : null,
+		'donotdismiss' : []
+	};
+
+	var settings = {};
+	$.extend(settings, defaults);
+
+	$.toaster = function (options)
+	{
+		if (typeof options === 'object')
+		{
+			if ('settings' in options)
+			{
+				settings = $.extend(settings, options.settings);
+			}
+
+			var title    = ('title' in options) ? options.title : 'Notice';
+			var message  = ('message' in options) ? options.message : null;
+			var priority = ('priority' in options) ? options.priority : 'success';
+
+			if (message !== null)
+			{
+				toasting.notify(title, message, priority);
+			}
+		}
+	};
+
+	$.toaster.reset = function ()
+	{
+		settings = {};
+		$.extend(settings, defaults);
+	};
+})(jQuery);
+	</script>
+</html>
+<!-------- Developed by Name: Amit Bauriya Email: amit001bauriya@gmail.com ------->
